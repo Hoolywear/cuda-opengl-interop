@@ -1,0 +1,35 @@
+# CMake build directories
+build/
+out/
+
+# Visual Studio
+.vs/
+*.VC.db
+*.VC.VC.opendb
+*.sln
+*.suo
+*.user
+*.userosscache
+*.userprefs
+*.vcxproj*
+
+# CMake generated files (if accidentally in source dir)
+CMakeFiles/
+CMakeCache.txt
+cmake_install.cmake
+install_manifest.txt
+_deps/
+
+# Compiled objects and binaries (just in case)
+*.obj
+*.lib
+*.dll
+*.exe
+*.pdb
+*.ilk
+*.exp
+
+# OS
+Thumbs.db
+Desktop.ini
+*.DS_Store

@@ -1,0 +1,49 @@
+{
+	"version": "2.0.0",
+	"tasks": [
+		{
+			"label": "CMake configure + build (default)",
+			"type": "shell",
+			"command": "cmake --build ./build --config Release",
+			"args": [],
+			"isBackground": false,
+			"problemMatcher": [
+				"$gcc"
+			],
+			"group": "build"
+		},
+		{
+			"label": "Rebuild after refactor",
+			"type": "shell",
+			"command": "cmake --build ./build --config Release",
+			"args": [],
+			"isBackground": false,
+			"problemMatcher": [
+				"$gcc"
+			],
+			"group": "build"
+		},
+		{
+			"label": "Build after FetchContent change",
+			"type": "shell",
+			"command": "cmake --build ./build --config Release",
+			"args": [],
+			"isBackground": false,
+			"problemMatcher": [
+				"$gcc"
+			],
+			"group": "build"
+		},
+		{
+			"label": "CMake configure (no vendored GLFW)",
+			"type": "shell",
+			"command": "cmake -G \"Visual Studio 17 2022\" -A x64 -S . -B build",
+			"args": [],
+			"isBackground": false,
+			"problemMatcher": [
+				"$gcc"
+			],
+			"group": "build"
+		}
+	]
+}
