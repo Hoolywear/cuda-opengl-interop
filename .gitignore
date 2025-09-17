@@ -13,6 +13,9 @@ out/
 *.userprefs
 *.vcxproj*
 
+# VS Code
+.vscode/
+
 # CMake generated files (if accidentally in source dir)
 CMakeFiles/
 CMakeCache.txt
