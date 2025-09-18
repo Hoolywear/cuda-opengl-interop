@@ -9,6 +9,12 @@ if (POLICY CMP0135)
     cmake_policy(SET CMP0135 NEW)
 endif()
 
+# Set CUDA architectures (RTX 3060 = Ampere SM 86) and adopt CMP0104
+if (POLICY CMP0104)
+    cmake_policy(SET CMP0104 NEW)
+endif()
+set(CMAKE_CUDA_ARCHITECTURES 86 CACHE STRING "CUDA architectures")
+
 # GLFW: prefer vendored copy if present; otherwise fetch a tagged release
 # GPT GENERATED: uses FetchContent to download GLFW 3.4 if not downloaded locally in external/glfw
 include(FetchContent)
