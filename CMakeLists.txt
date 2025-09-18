@@ -28,12 +28,25 @@ endif()
 add_library(glad STATIC external/glad/src/glad.c)
 target_include_directories(glad PUBLIC external/glad/include)
 
-add_executable(${CMAKE_PROJECT_NAME} main.cpp)
+set(SRC_DIR ${CMAKE_SOURCE_DIR}/src)
+set(INCLUDE_DIR ${CMAKE_SOURCE_DIR}/include)
+
+enable_language(CUDA)
+add_compile_definitions(HAS_CUDA=1)
+
+set(APP_SOURCES
+    ${SRC_DIR}/main.cpp
+    ${SRC_DIR}/callbacks.cpp
+    ${SRC_DIR}/cuda_kernels.cu
+)
+
+add_executable(${CMAKE_PROJECT_NAME} ${APP_SOURCES})
 
 target_include_directories(${CMAKE_PROJECT_NAME} PRIVATE
-                            "${CMAKE_SOURCE_DIR}/external/glad/include"
-                            "${CMAKE_SOURCE_DIR}/external/glfw/include"
-                            )
+    "${CMAKE_SOURCE_DIR}/external/glad/include"
+    "${CMAKE_SOURCE_DIR}/external/glfw/include"
+    ${INCLUDE_DIR}
+)
 
 target_link_libraries(${CMAKE_PROJECT_NAME} PRIVATE
                       glad
