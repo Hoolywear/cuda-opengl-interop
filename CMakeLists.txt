@@ -44,6 +44,7 @@ set(APP_SOURCES
     ${SRC_DIR}/main.cpp
     ${SRC_DIR}/callbacks.cpp
     ${SRC_DIR}/cuda_kernels.cu
+    ${SRC_DIR}/shader_utils.cpp
 )
 
 add_executable(${CMAKE_PROJECT_NAME} ${APP_SOURCES})
@@ -52,9 +53,21 @@ target_include_directories(${CMAKE_PROJECT_NAME} PRIVATE
     "${CMAKE_SOURCE_DIR}/external/glad/include"
     "${CMAKE_SOURCE_DIR}/external/glfw/include"
     ${INCLUDE_DIR}
+    $<BUILD_INTERFACE:${CMAKE_CUDA_TOOLKIT_INCLUDE_DIRECTORIES}>
 )
 
 target_link_libraries(${CMAKE_PROJECT_NAME} PRIVATE
                       glad
                       glfw
+                      cuda
+                      cudart_static
                       )
+
+# Copy shader files to build directory (next to executable) for runtime loading
+file(GLOB SHADER_FILES "${CMAKE_SOURCE_DIR}/shaders/*.*")
+if (SHADER_FILES)
+    add_custom_command(TARGET ${CMAKE_PROJECT_NAME} POST_BUILD
+        COMMAND ${CMAKE_COMMAND} -E make_directory "$<TARGET_FILE_DIR:${CMAKE_PROJECT_NAME}>/shaders"
+        COMMAND ${CMAKE_COMMAND} -E copy_if_different ${SHADER_FILES} "$<TARGET_FILE_DIR:${CMAKE_PROJECT_NAME}>/shaders"
+        COMMENT "Copying shader files")
+endif()
