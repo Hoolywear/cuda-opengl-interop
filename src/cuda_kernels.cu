@@ -1,33 +1,24 @@
 #include "cuda_kernels.cuh"
 #include <cstdio>
-
-__global__ void dummy_kernel(int *out) {
-    if (threadIdx.x == 0 && blockIdx.x == 0) {
-        *out = 42;
-    }
+__global__ void kernel(float3 *pos, unsigned int width, unsigned int height)
+{
+    unsigned int x = blockIdx.x * blockDim.x + threadIdx.x;
+    unsigned int y = blockIdx.y * blockDim.y + threadIdx.y;
+    
+    // calculate uv coordinates
+    float u = ( x + 0.5f ) / (float)width;
+    float v = ( y + 0.5f ) / (float)height;
+    
+    u       = u * 2.0f - 1.0f;
+    v       = v * 2.0f - 1.0f;
+    
+    // write output vertex
+    pos[y * width + x] = make_float3(u, v, 1.0f);
 }
 
-int launch_dummy_kernel() {
-    int *d_out = nullptr;
-    int h_out = 0;
-    cudaError_t err = cudaMalloc(&d_out, sizeof(int));
-    if (err != cudaSuccess) {
-        std::fprintf(stderr, "cudaMalloc failed: %s\n", cudaGetErrorString(err));
-        return 1;
-    }
-    dummy_kernel<<<1, 32>>>(d_out);
-    err = cudaGetLastError();
-    if (err != cudaSuccess) {
-        std::fprintf(stderr, "Kernel launch failed: %s\n", cudaGetErrorString(err));
-        cudaFree(d_out);
-        return 2;
-    }
-    err = cudaMemcpy(&h_out, d_out, sizeof(int), cudaMemcpyDeviceToHost);
-    if (err != cudaSuccess) {
-        std::fprintf(stderr, "cudaMemcpy failed: %s\n", cudaGetErrorString(err));
-        cudaFree(d_out);
-        return 3;
-    }
-    cudaFree(d_out);
-    return h_out == 42 ? 0 : 4;
+
+void launch_kernel(float3 *pos, unsigned int w, unsigned int h) {
+    dim3 block(8, 8, 1);
+    dim3 grid(w / block.x, h / block.y, 1);
+    kernel<<<grid,block>>>(pos,w,h);
 }
