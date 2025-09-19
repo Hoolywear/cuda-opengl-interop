@@ -1,4 +1,5 @@
 #pragma once
+#include <glad/glad.h>
 #include <GLFW/glfw3.h>
 
 // Key input handler
@@ -6,6 +7,9 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
 
 // Window size callback (resize handling)
 void window_size_callback(GLFWwindow* window, int width, int height);
+
+// Window size callback (resize handling)
+void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 
 // Error callback for GLFW
 void error_callback(int error, const char* description);

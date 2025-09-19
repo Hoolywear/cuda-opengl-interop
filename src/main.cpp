@@ -44,6 +44,7 @@ bool init(GLFWwindow **windowPtr, int win_w, int win_h) {
     // Set callbacks
     glfwSetKeyCallback(*windowPtr, key_callback);
     glfwSetWindowSizeCallback(*windowPtr, window_size_callback);
+    glfwSetFramebufferSizeCallback(*windowPtr, framebuffer_size_callback);
     
     // Set OpenGL context
     glfwMakeContextCurrent(*windowPtr);
@@ -136,7 +137,12 @@ int main(int argc, char** argv) {
         return -1;
     }
 
-    // int frameCount = 0;
+    CUDA_CHECK(cudaGraphicsMapResources(1, &buf1.cuda_resource, 0));
+    size_t num_bytes = 0;
+    CUDA_CHECK(cudaGraphicsResourceGetMappedPointer((void **)&buf1.dptr, &num_bytes, buf1.cuda_resource));
+    launch_kernel(buf1.dptr, mesh_w, mesh_h, true);
+    CUDA_CHECK_KERNEL();
+    CUDA_CHECK(cudaGraphicsUnmapResources(1, &buf1.cuda_resource, 0));
     // Main loop
     while (!glfwWindowShouldClose(window)) {
         // Run loop instructions (for now, use the loop instead of the helper function)
